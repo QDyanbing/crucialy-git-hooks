@@ -41,7 +41,10 @@
     "!test"
   ],
   "scripts": {
+    "changeset": "changeset",
     "prepublishOnly": "npm test",
+    "release": "changeset publish && git push origin master --follow-tags",
+    "release:prepare": "changeset version",
     "test": "node test/test.js"
   },
   "devDependencies": {
