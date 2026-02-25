@@ -1,0 +1,59 @@
+{
+  "name": "@crucialy/git-hooks",
+  "version": "0.0.0",
+  "description": "Git hooks configuration for Crucialy projects with Husky 9.x and lint-staged",
+  "keywords": [
+    "husky",
+    "lint-staged",
+    "git-hooks",
+    "git",
+    "hooks",
+    "commit-msg",
+    "pre-commit",
+    "conventional-commits",
+    "commitlint",
+    "prettier",
+    "eslint",
+    "stylelint"
+  ],
+  "homepage": "https://github.com/crucialy/crucialy-git-hooks#readme",
+  "bugs": {
+    "url": "https://github.com/crucialy/crucialy-git-hooks/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/crucialy/crucialy-git-hooks.git"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "gaoyanbing",
+    "email": "yanbing.gao@aliyun.com"
+  },
+  "bin": {
+    "crucialy": "./crucialy.js"
+  },
+  "files": [
+    "commands",
+    "crucialy.js",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE",
+    "!test"
+  ],
+  "scripts": {
+    "prepublishOnly": "npm test",
+    "test": "node test/test.js"
+  },
+  "peerDependencies": {
+    "husky": "^9.0.0",
+    "lint-staged": "^16.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=8.0.0"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  }
+}
