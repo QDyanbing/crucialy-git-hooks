@@ -24,7 +24,17 @@
 - 修 bug 时请尽量提供复现步骤或环境说明。
 - CI 通过后再申请 Review；合并与发布由维护者在合入后统一处理。
 
-## 4. Issue
+## 4. 维护者发布流程
+
+合入 master 后需要发版时：
+
+1. 若尚未为本次改动添加 changeset，先执行 `pnpm changeset`，选择版本类型并写描述，提交生成的 `.changeset/*.md`。
+2. 更新版本与 CHANGELOG：`pnpm run release:prepare`。
+3. 发布到 npm 并推送标签：`pnpm run release`（会执行 `changeset publish` 并 `git push origin master --follow-tags`）。
+
+首次发布前需至少有一个 changeset，再执行步骤 2、3。
+
+## 5. Issue
 
 - 报 bug 或提需求请使用 [Issue 模板](.github/ISSUE_TEMPLATE/)（Bug 报告 / 功能建议），便于快速定位与跟进。
 - 有疑问可在对应 Issue 或 PR 下讨论，或通过 README 中的联系方式联系维护者。
