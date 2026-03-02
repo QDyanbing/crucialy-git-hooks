@@ -136,10 +136,10 @@ function installConfigFiles() {
 
   try {
     const lintstagedConfig = {
-      '*.{js,ts,jsx,tsx}': ['eslint --max-warnings=0 --fix', 'prettier --write'],
-      '*.vue': ['eslint --max-warnings=0 --fix', 'stylelint --fix', 'prettier --write'],
-      '*.{css,scss,less}': ['stylelint --fix', 'prettier --write'],
-      '*.{json,md,yaml,yml}': ['prettier --write'],
+      '*.{js,ts,jsx,tsx}': ['eslint --max-warnings=0 --fix', 'prettier --cache --write'],
+      '*.vue': ['eslint --max-warnings=0 --fix', 'stylelint --fix', 'prettier --cache --write'],
+      '*.{css,scss,less}': ['stylelint --fix', 'prettier --cache --write'],
+      '*.{json,md,yaml,yml}': ['prettier --cache --write'],
     };
 
     const configContent = JSON.stringify(lintstagedConfig, null, 2) + '\n';
