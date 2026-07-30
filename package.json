@@ -43,7 +43,7 @@
   "scripts": {
     "changeset": "changeset",
     "prepublishOnly": "pnpm test",
-    "release": "changeset publish && git push origin master --follow-tags",
+    "release": "changeset publish && git push origin master --follow-tags && (gh release view \"v$npm_package_version\" >/dev/null 2>&1 || gh release create \"v$npm_package_version\" --verify-tag --title \"$npm_package_version\" --generate-notes)",
     "release:prepare": "changeset version",
     "test": "node test/test.js"
   },
