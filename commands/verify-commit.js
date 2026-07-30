@@ -26,9 +26,9 @@ function removeComment(msg) {
  */
 const msgPath = process.argv[2] || process.env.GIT_PARAMS;
 
-// 如果没有提供路径，静默退出（可能是非 git hooks 场景）
 if (!msgPath) {
-  process.exit(0);
+  console.error(colors.red('Commit message file path is required'));
+  process.exit(1);
 }
 
 /**
@@ -37,7 +37,7 @@ if (!msgPath) {
 let msg;
 try {
   const rawContent = fs.readFileSync(msgPath, 'utf-8');
-  msg = removeComment(rawContent.trim());
+  msg = removeComment(rawContent).trim();
 } catch (error) {
   const errorMessage = error instanceof Error ? error.message : String(error);
   console.error(colors.red(`Error reading commit message file: ${msgPath}`));
@@ -46,7 +46,7 @@ try {
 }
 
 /**
- * 约定式提交格式: <type>(<scope>): <subject>
+ * 约定式提交格式: <type>(<scope>)!: <subject>
  * 参考: https://github.com/angular/angular/blob/master/CONTRIBUTING.md#commit-message-header
  */
 const COMMIT_TYPES = [
@@ -61,30 +61,23 @@ const COMMIT_TYPES = [
   'ci',
   'chore',
   'revert',
-  'workflow',
-  'types',
-  'wip',
-  'release',
-  'dep',
-  'deps',
-  'example',
-  'examples',
-  'merge',
 ];
 
 const SPECIAL_COMMITS = ['Merge', 'Revert', 'Version'];
 
 // 提交信息主题最大长度
 const SUBJECT_MAX_LENGTH = 50;
+const header = msg.split(/\r?\n/, 1)[0];
 
 /**
  * 构建 commit message 验证正则表达式
  * 支持常规格式和特殊提交（Merge, Revert, Version）
  */
-const commitRE = new RegExp(
-  `^((${COMMIT_TYPES.join('|')})(\\(.+\\))?:|${SPECIAL_COMMITS.join('|')}) .{1,${SUBJECT_MAX_LENGTH}}`,
-  'i',
+const subjectRE = `\\S(?:.{0,${SUBJECT_MAX_LENGTH - 2}}\\S)?`;
+const conventionalCommitRE = new RegExp(
+  `^(?:${COMMIT_TYPES.join('|')})(?:\\([^()\\r\\n]+\\))?!?: ${subjectRE}$`,
 );
+const specialCommitRE = new RegExp(`^(?:${SPECIAL_COMMITS.join('|')}) \\S(?:.*\\S)?$`);
 
 /**
  * 输出错误信息和使用示例
@@ -94,7 +87,7 @@ function printError() {
   console.log();
   console.error(`  ${colors.bgRed.white(' ERROR ')} ${colors.red('提交信息不符合约定格式')}`);
   console.log();
-  console.error(`  ${colors.red('请使用格式：')} <type>(<scope>): <subject>`);
+  console.error(`  ${colors.red('请使用格式：')} <type>(<scope>)!: <subject>`);
   console.log();
   console.error(`  ${colors.yellow('type 说明：')}`);
   console.error(`    feat      新功能`);
@@ -112,6 +105,7 @@ function printError() {
   console.error(`  ${colors.yellow('例如：')}`);
   console.error(`    ${colors.green('feat: 新增功能')}`);
   console.error(`    ${colors.green('fix(lint): 修复配置问题')}`);
+  console.error(`    ${colors.green('feat!: 调整公共接口')}`);
   console.error(`    ${colors.green('chore: 更新依赖版本')}`);
   console.error(`    ${colors.green("Merge branch 'main' into dev")}`);
   console.log();
@@ -120,7 +114,7 @@ function printError() {
 /**
  * 验证 commit message 格式
  */
-if (!commitRE.test(msg)) {
+if (!conventionalCommitRE.test(header) && !specialCommitRE.test(header)) {
   printError();
   process.exit(1);
 }
