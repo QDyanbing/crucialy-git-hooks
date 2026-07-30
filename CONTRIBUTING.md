@@ -5,9 +5,9 @@
 ## 1. 分支与提交
 
 - 默认分支为 `master`，请勿直接在该分支上提交或 force-push。
-- 基于最新 `master` 新建分支，命名建议：`feature/<topic>`、`fix/<issue>`、`docs/<scope>`。
+- 基于最新 `master` 新建分支，命名建议：`feature-topic`、`fix-issue`、`docs-scope`。
 - 提交信息请遵循约定式提交（见 README），如：`feat: 支持 xxx`、`fix: 修复 xxx`。
-- 提交前在仓库根目录执行 `node test/test.js`，确保测试通过。
+- 提交前在仓库根目录执行 `pnpm test`，确保测试通过。
 
 ## 2. Changesets 与版本
 

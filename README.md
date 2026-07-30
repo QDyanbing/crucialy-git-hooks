@@ -14,86 +14,65 @@
 ### 1. 安装包和依赖
 
 ```bash
-pnpm add -D @crucialy/git-hooks husky lint-staged
+pnpm add -D @crucialy/git-hooks husky lint-staged eslint prettier stylelint
 ```
 
-**注意**：需要同时安装 `husky` 和 `lint-staged` 作为 peerDependencies。
+也可以使用其他包管理器：
 
-### 2. 配置 package.json
+```bash
+npm install -D @crucialy/git-hooks husky lint-staged eslint prettier stylelint
+yarn add -D @crucialy/git-hooks husky lint-staged eslint prettier stylelint
+bun add -D @crucialy/git-hooks husky lint-staged eslint prettier stylelint
+```
+
+**注意**：本包需要使用 Node.js 20.18 或更高版本。使用上述命令安装当前最新工具版本时建议使用 Node.js 24；Node.js 20 项目需要选择符合各工具 `engines` 要求的兼容版本，其中 lint-staged 应使用 16。
+
+本包负责安装 Git Hooks 和生成 lint-staged 配置，不提供 ESLint、Prettier、Stylelint 的规则配置。使用方需要根据项目技术栈维护对应配置。
+
+### 2. 配置 `package.json`
 
 在项目的 `package.json` 中添加以下脚本：
 
 ```json
 {
   "scripts": {
-    "postinstall": "crucialy setup",
-    "prepare": "husky"
+    "hooks:setup": "crucialy setup",
+    "prepare": "husky && crucialy setup"
   }
 }
 ```
 
-**说明**：
-
-- `postinstall`: 每次 `pnpm install` 后自动运行 setup，确保 git hooks 文件是最新的
-- `prepare`: husky 初始化命令（Husky 9.x）
-
-**注意**：本包仅支持 Husky 9.x，如果你使用的是 Husky 8.x，请升级到 9.x：
-
-```bash
-pnpm add -D husky@^9.0.0
-```
-
 ### 3. 自动安装
 
-`postinstall` 脚本会自动运行 `crucialy setup`，在项目根目录生成以下文件：
+安装依赖时，`prepare` 会先初始化 Husky，再运行 `crucialy setup` 生成并更新项目的 Hook 文件。
 
 如需手动运行，可以使用以下命令：
 
 ```bash
-# 使用 pnpm
-pnpm exec crucialy setup
-
-# 使用 npx
-npx crucialy setup
-
-# 如果已全局安装
-crucialy setup
+pnpm run prepare
 ```
 
 ### 4. 命令行使用示例
 
 ```bash
 # 在当前项目根目录安装 hooks 和配置
-npx crucialy setup
+pnpm run hooks:setup
 
 # 仅安装提交信息验证（关闭代码检查）
-npx crucialy setup --skip-lint
+pnpm run hooks:setup --skip-lint
 
 # 仅安装代码检查（关闭提交信息验证）
-npx crucialy setup --skip-commit-msg
+pnpm run hooks:setup --skip-commit-msg
 ```
 
-### 可用命令
+`--skip-lint` 和 `--skip-commit-msg` 会删除此前由本包生成的对应 Hook，不会删除自行维护的 Hook。
 
-```bash
-# 安装 git hooks 和配置文件（默认：两个都启用）
-pnpm exec crucialy setup
-
-# 只启用提交信息验证，跳过代码检查
-pnpm exec crucialy setup --skip-lint
-
-# 只启用代码检查，跳过提交信息验证
-pnpm exec crucialy setup --skip-commit-msg
-```
+如果 `.husky` 中已经存在自行维护的同名 Hook，setup 会停止并保留原文件，避免静默覆盖已有逻辑。确认不再需要原 Hook 后，删除对应文件并重新执行 setup。
 
 也可以通过环境变量配置：
 
-```json
-{
-  "scripts": {
-    "postinstall": "SKIP_LINT=true crucialy setup"
-  }
-}
+```bash
+SKIP_LINT=true pnpm run hooks:setup
 ```
 
 ### 生成的文件
@@ -125,8 +104,10 @@ pnpm exec crucialy setup --skip-commit-msg
 提交信息必须符合以下格式：
 
 ```
-<type>(<scope>): <subject>
+<type>(<scope>)!: <subject>
 ```
+
+`scope` 和 `!` 为可选内容，`type` 必须使用小写，`subject` 长度不能超过 50 个字符。
 
 **type 类型**：
 
@@ -186,12 +167,8 @@ rm .husky/pre-commit  # 删除后重新运行 crucialy setup 恢复
 
 CI 环境通常不需要 git hooks，可以在 CI 配置中跳过：
 
-```json
-{
-  "scripts": {
-    "postinstall": "[ -n \"$CI\" ] || crucialy setup"
-  }
-}
+```bash
+HUSKY=0 SKIP_LINT=true SKIP_COMMIT_MSG=true pnpm install
 ```
 
 ## License
