@@ -1,6 +1,6 @@
 {
   "name": "@crucialy/git-hooks",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Git hooks configuration for Crucialy projects with Husky 9.x and lint-staged",
   "keywords": [
     "husky",
