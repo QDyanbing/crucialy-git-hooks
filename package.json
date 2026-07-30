@@ -16,13 +16,13 @@
     "eslint",
     "stylelint"
   ],
-  "homepage": "https://github.com/crucialy/crucialy-git-hooks#readme",
+  "homepage": "https://github.com/QDyanbing/crucialy-git-hooks#readme",
   "bugs": {
-    "url": "https://github.com/crucialy/crucialy-git-hooks/issues"
+    "url": "https://github.com/QDyanbing/crucialy-git-hooks/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/crucialy/crucialy-git-hooks.git"
+    "url": "git+https://github.com/QDyanbing/crucialy-git-hooks.git"
   },
   "license": "MIT",
   "author": {
@@ -42,25 +42,32 @@
   ],
   "scripts": {
     "changeset": "changeset",
-    "prepublishOnly": "npm test",
+    "prepublishOnly": "pnpm test",
     "release": "changeset publish && git push origin master --follow-tags",
     "release:prepare": "changeset version",
     "test": "node test/test.js"
   },
   "devDependencies": {
     "@changesets/changelog-github": "^0.5.0",
-    "@changesets/cli": "^2.29.7"
+    "@changesets/cli": "^2.29.7",
+    "eslint": "^10.8.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.2.0",
+    "prettier": "^3.9.6",
+    "stylelint": "^17.14.1"
   },
   "peerDependencies": {
+    "eslint": "^8.0.0 || ^9.0.0 || ^10.0.0",
     "husky": "^9.0.0",
-    "lint-staged": "^16.0.0"
+    "lint-staged": "^16.0.0 || ^17.0.0",
+    "prettier": "^3.0.0",
+    "stylelint": "^16.0.0 || ^17.0.0"
   },
   "engines": {
-    "node": ">=18.0.0",
-    "pnpm": ">=8.0.0"
+    "node": ">=20.18.0"
   },
   "volta": {
-    "node": "22.14.0",
+    "node": "24.18.0",
     "pnpm": "8.6.11"
   },
   "publishConfig": {

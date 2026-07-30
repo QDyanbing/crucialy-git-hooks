@@ -1,6 +1,6 @@
 {
   "$schema": "https://unpkg.com/@changesets/config@3.1.1/schema.json",
-  "changelog": ["@changesets/changelog-github", { "repo": "crucialy/crucialy-git-hooks" }],
+  "changelog": ["@changesets/changelog-github", { "repo": "QDyanbing/crucialy-git-hooks" }],
   "commit": false,
   "fixed": [],
   "linked": [],
